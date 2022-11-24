@@ -1,6 +1,54 @@
-import React from "react";
+import React, { useContext } from "react";
+import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { ImageUpload } from "../api/ImageUpload";
+import { AuthContext } from "../contexts/AuthProvider";
 const Register = () => {
+  const { createUser, updateUser } = useContext(AuthContext);
+  const handleRegister = (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const user = {
+      name: form.name.value,
+      role: form.role.value,
+      email: form.email.value,
+      password: form.password.value,
+      image: event.target.image.files[0],
+    };
+    createUser(user.email, user.password).then((result) => {
+      toast("User Created Successfully.");
+      const userInfo = {
+        displayName: user.name,
+      };
+      updateUser(userInfo)
+        .then(() => {
+          saveUser(user.image, user);
+        })
+        .catch((err) => console.log(err));
+    });
+  };
+  const saveUser = (image, userInfo) => {
+    ImageUpload(image)
+      .then((data) => {
+        if (data.success) {
+          // save user information to the database
+          fetch(`${process.env.REACT_APP_domain}/users`, {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              // authorization: `bearer ${localStorage.getItem("accessToken")}`,
+            },
+            body: JSON.stringify(userInfo),
+          })
+            .then((res) => res.json())
+            .then((result) => {
+              console.log(result);
+              toast.success(`${data.name} is added successfully`);
+            });
+        }
+      })
+      .catch((err) => console.log(err.message));
+  };
   return (
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content flex-col lg:flex-row-reverse">
@@ -13,7 +61,7 @@ const Register = () => {
           </p>
         </div>
         <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-          <form className="card-body">
+          <form onSubmit={handleRegister} className="card-body">
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Name</span>
@@ -28,15 +76,25 @@ const Register = () => {
             </div>
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Photo URL</span>
+                <span className="label-text">Photo</span>
               </label>
               <input
-                type="text"
-                name="photoURL"
-                placeholder="Your photo url"
-                required
-                className="input input-bordered focus:border-none"
+                type="file"
+                name="image"
+                className="file-input file-input-bordered w-full max-w-xs"
               />
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Select your role</span>
+              </label>
+              <select
+                name="role"
+                className="select focus:border-none select-bordered w-full max-w-xs"
+              >
+                <option value="buyer">Buyer</option>
+                <option value="seller">Seller</option>
+              </select>
             </div>
             <div className="form-control">
               <label className="label">
