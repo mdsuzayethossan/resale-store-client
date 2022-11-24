@@ -1,10 +1,64 @@
 import React from "react";
-
+import { Link, NavLink } from "react-router-dom";
 const Navbar = () => {
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
-        <a className="btn btn-ghost normal-case text-xl">daisyUI</a>
+        <Link className="font-bold text-primary text-xl">Resale Store</Link>
+      </div>
+      <div>
+        <ul className="hidden lg:flex gap-14">
+          <li>
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? "text-primary font-bold" : "font-semibold"
+              }
+              to="/home"
+            >
+              Home
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? "text-primary font-bold" : "font-semibold"
+              }
+              to="/blog"
+            >
+              Blog
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? "text-primary font-bold" : "font-semibold"
+              }
+              to="/dashboard"
+            >
+              Dashboard
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? "text-primary font-bold" : "font-semibold"
+              }
+              to="/login"
+            >
+              Login
+            </NavLink>
+          </li>
+          <li>
+            <NavLink
+              className={({ isActive }) =>
+                isActive ? "text-primary font-bold" : "font-semibold"
+              }
+              to="/register"
+            >
+              Register
+            </NavLink>
+          </li>
+        </ul>
       </div>
       <div className="flex-none">
         <div className="dropdown dropdown-end">
