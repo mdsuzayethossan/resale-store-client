@@ -3,8 +3,6 @@ export const ImageUpload = async (image) => {
   formData.append("image", image);
 
   const url = `https://api.imgbb.com/1/upload?key=${process.env.REACT_APP_imgbb_key}`;
-  console.log(url);
-
   const response = await fetch(url, {
     method: "POST",
     body: formData,

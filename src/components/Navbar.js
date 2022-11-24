@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
+import { AuthContext } from "../contexts/AuthProvider";
 const Navbar = () => {
+  const { user, logOut } = useContext(AuthContext);
+  const handleLogout = () => {
+    logOut().then().catch();
+  };
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
@@ -38,26 +43,37 @@ const Navbar = () => {
               Dashboard
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              className={({ isActive }) =>
-                isActive ? "text-primary font-bold" : "font-semibold"
-              }
-              to="/login"
-            >
-              Login
-            </NavLink>
-          </li>
-          <li>
-            <NavLink
-              className={({ isActive }) =>
-                isActive ? "text-primary font-bold" : "font-semibold"
-              }
-              to="/register"
-            >
-              Register
-            </NavLink>
-          </li>
+          {(user?.email && (
+            <li>
+              <button onClick={handleLogout} className="font-bold">
+                LogOut
+              </button>
+            </li>
+          )) || (
+            <>
+              {" "}
+              <li>
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive ? "text-primary font-bold" : "font-semibold"
+                  }
+                  to="/login"
+                >
+                  Login
+                </NavLink>
+              </li>
+              <li>
+                <NavLink
+                  className={({ isActive }) =>
+                    isActive ? "text-primary font-bold" : "font-semibold"
+                  }
+                  to="/register"
+                >
+                  Register
+                </NavLink>
+              </li>
+            </>
+          )}
         </ul>
       </div>
       <div className="flex-none">

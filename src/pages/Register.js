@@ -1,10 +1,17 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ImageUpload } from "../api/ImageUpload";
 import { AuthContext } from "../contexts/AuthProvider";
+import useToken from "../hooks/useToken";
 const Register = () => {
+  const navigate = useNavigate();
   const { createUser, updateUser } = useContext(AuthContext);
+  const [createdEmail, setCreatedEmail] = useState("");
+  const [token] = useToken(createdEmail);
+  if (token) {
+    navigate("/");
+  }
   const handleRegister = (event) => {
     event.preventDefault();
     const form = event.target;
@@ -16,12 +23,12 @@ const Register = () => {
       image: event.target.image.files[0],
     };
     createUser(user.email, user.password).then((result) => {
-      toast("User Created Successfully.");
+      toast.success("User Created Successfully.");
       const userInfo = {
         displayName: user.name,
       };
       updateUser(userInfo)
-        .then(() => {
+        .then((result) => {
           saveUser(user.image, user);
         })
         .catch((err) => console.log(err));
@@ -30,22 +37,21 @@ const Register = () => {
   const saveUser = (image, userInfo) => {
     ImageUpload(image)
       .then((data) => {
-        if (data.success) {
-          // save user information to the database
-          fetch(`${process.env.REACT_APP_domain}/users`, {
-            method: "POST",
-            headers: {
-              "content-type": "application/json",
-              // authorization: `bearer ${localStorage.getItem("accessToken")}`,
-            },
-            body: JSON.stringify(userInfo),
-          })
-            .then((res) => res.json())
-            .then((result) => {
-              console.log(result);
-              toast.success(`${data.name} is added successfully`);
-            });
-        }
+        // save user information to the database
+        userInfo.image = data;
+        fetch(`${process.env.REACT_APP_domain}/users`, {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+            authorization: `bearer ${localStorage.getItem("accessToken")}`,
+          },
+          body: JSON.stringify(userInfo),
+        })
+          .then((res) => res.json())
+          .then((result) => {
+            setCreatedEmail(userInfo.email);
+            toast.success(`${data.name} is added successfully`);
+          });
       })
       .catch((err) => console.log(err.message));
   };
