@@ -1,17 +1,24 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ImageUpload } from "../../../api/ImageUpload";
 import { AuthContext } from "../../../contexts/AuthProvider";
 import toast from "react-hot-toast";
 import Loading from "../../../components/Loading";
-
+import axios from "axios";
 const AddProduct = () => {
   const { user } = useContext(AuthContext);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  useEffect(() => {
+    axios.get(`${process.env.REACT_APP_domain}/categories`).then((response) => {
+      setCategories(response.data);
+    });
+  }, []);
   if (loading) {
     return <Loading></Loading>;
   }
+
   const handleAddProduct = (event) => {
     setLoading(true);
     event.preventDefault();
@@ -20,12 +27,14 @@ const AddProduct = () => {
       sellerName: user?.displayName,
       sellerEmail: user?.email,
       name: form.name.value,
+      category: form.category.value,
       originalprice: form.originalprice.value,
       resaleprice: form.resaleprice.value,
       condition: form.condition.value,
       phone: form.phone.value,
       location: form.location.value,
       purchaseyear: form.purchaseyear.value,
+      description: form.description.value,
       image: event.target.image.files[0],
     };
     saveUser(produtInfo.image, produtInfo);
@@ -81,6 +90,19 @@ const AddProduct = () => {
         </div>
         <div className="form-control">
           <label className="label">
+            <span className="label-text">Select category</span>
+          </label>
+          <select
+            name="category"
+            className="select focus:border-none select-bordered w-full"
+          >
+            {categories.map((category) => (
+              <option value={category._id}>{category.name}</option>
+            ))}
+          </select>
+        </div>
+        <div className="form-control">
+          <label className="label">
             <span className="label-text">Original price</span>
           </label>
           <input
@@ -103,7 +125,6 @@ const AddProduct = () => {
             className="input input-bordered focus:border-none"
           />
         </div>
-
         <div className="form-control">
           <label className="label">
             <span className="label-text">Select product condition</span>
@@ -160,8 +181,18 @@ const AddProduct = () => {
           <input
             type="file"
             name="image"
-            className="file-input file-input-bordered w-full max-w-xs"
+            className="file-input file-input-bordered w-full"
           />
+        </div>
+        <div className="form-control">
+          <label className="label">
+            <span className="label-text">Product description</span>
+          </label>
+          <textarea
+            name="description"
+            className="textarea focus:border-none textarea-bordered"
+            placeholder="Description"
+          ></textarea>
         </div>
       </div>
       <div className="text-center mt-7">

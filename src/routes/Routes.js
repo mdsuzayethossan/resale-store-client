@@ -9,6 +9,7 @@ import AllSellers from "../pages/Dashboard/Seller/AllSellers";
 import MyProducts from "../pages/Dashboard/Seller/MyProducts";
 import Home from "../pages/Home/Home";
 import Login from "../pages/Login";
+import Products from "../pages/Products/Products";
 import Register from "../pages/Register";
 
 const router = createBrowserRouter([
@@ -29,8 +30,10 @@ const router = createBrowserRouter([
         element: <Login></Login>,
       },
       {
-        path: "/category:/id",
-        element: <Login></Login>,
+        path: "/category/:id",
+        element: <Products></Products>,
+        loader: ({ params }) =>
+          fetch(`${process.env.REACT_APP_domain}/category/${params.id}`),
       },
       {
         path: "/register",

@@ -4,10 +4,10 @@ import Categories from "./Categories";
 
 const Home = () => {
   return (
-    <>
+    <div className="container">
       <Banner></Banner>
       <Categories></Categories>
-    </>
+    </div>
   );
 };
 
