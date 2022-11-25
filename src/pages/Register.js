@@ -35,22 +35,23 @@ const Register = () => {
     });
   };
   const saveUser = (image, userInfo) => {
+    const email = userInfo.email;
     ImageUpload(image)
       .then((data) => {
         // save user information to the database
         userInfo.image = data;
+        delete userInfo.password;
         fetch(`${process.env.REACT_APP_domain}/users`, {
           method: "POST",
           headers: {
             "content-type": "application/json",
-            authorization: `bearer ${localStorage.getItem("accessToken")}`,
           },
           body: JSON.stringify(userInfo),
         })
           .then((res) => res.json())
           .then((result) => {
-            setCreatedEmail(userInfo.email);
-            toast.success(`${data.name} is added successfully`);
+            console.log(result);
+            setCreatedEmail(email);
           });
       })
       .catch((err) => console.log(err.message));

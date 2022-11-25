@@ -9,7 +9,9 @@ const Navbar = () => {
   return (
     <div className="navbar bg-base-100">
       <div className="flex-1">
-        <Link className="font-bold text-primary text-xl">Resale Store</Link>
+        <Link to="/" className="font-bold text-primary text-xl">
+          Resale Store
+        </Link>
       </div>
       <div>
         <ul className="hidden lg:flex gap-14">

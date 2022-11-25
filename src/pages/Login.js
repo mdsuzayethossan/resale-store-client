@@ -3,8 +3,12 @@ import { LockClosedIcon } from "@heroicons/react/20/solid";
 import { AuthContext } from "../contexts/AuthProvider";
 import { useLocation, useNavigate } from "react-router-dom";
 import useToken from "../hooks/useToken";
+import toast from "react-hot-toast";
+import { GoogleAuthProvider } from "firebase/auth";
 const Login = () => {
-  const { loading, setLoading, signIn } = useContext(AuthContext);
+  const { loading, setLoading, signIn, setUser, providerLogin } =
+    useContext(AuthContext);
+  const googleProvider = new GoogleAuthProvider();
   const [loginError, setLoginError] = useState("");
   const [loginUserEmail, setLoginUserEmail] = useState("");
   const [token] = useToken(loginUserEmail);
@@ -26,7 +30,6 @@ const Login = () => {
     signIn(user.email, user.password)
       .then((result) => {
         const user = result.user;
-        console.log(user);
         setLoginUserEmail(user.email);
       })
       .catch((error) => {
@@ -34,10 +37,44 @@ const Login = () => {
         setLoginError(error.message);
       });
   };
+
+  const handleGoogleLogin = () => {
+    providerLogin(googleProvider)
+      .then((result) => {
+        const user = result.user;
+        setUser(user);
+        const userDetails = {
+          name: user.displayName,
+          role: "buyer",
+          email: user.email,
+          image: user.photoURL,
+        };
+        saveUser(userDetails);
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
+  };
+  const saveUser = (userInfo) => {
+    fetch(`${process.env.REACT_APP_domain}/users`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(userInfo),
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        setLoginUserEmail(userInfo.email);
+      });
+  };
   return (
     <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md text-center space-y-8">
-        <button className="btn w-full rounded-full bg-transparent border-2 text-primary border-primary hover:bg-primary hover:text-white hover:border-primary uppercase">
+        <button
+          onClick={handleGoogleLogin}
+          className="btn w-full rounded-full bg-transparent border-2 text-primary border-primary hover:bg-primary hover:text-white hover:border-primary uppercase"
+        >
           <svg
             width="20"
             height="20"
