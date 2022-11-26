@@ -36,6 +36,8 @@ const AddProduct = () => {
       purchaseyear: form.purchaseyear.value,
       description: form.description.value,
       image: event.target.image.files[0],
+      advertised: false,
+      status: "available",
     };
     saveUser(produtInfo.image, produtInfo);
   };
