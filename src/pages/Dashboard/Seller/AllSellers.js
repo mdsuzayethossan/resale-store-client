@@ -2,11 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useContext } from "react";
 import { AuthContext } from "../../../contexts/AuthProvider";
 import toast from "react-hot-toast";
+import Loading from "../../../components/Loading";
 const AllSellers = () => {
   const { user } = useContext(AuthContext);
   const url = `${process.env.REACT_APP_domain}/sellers`;
-  const { data: sellers = [], refetch } = useQuery({
-    queryKey: ["sellers", user?.email],
+  const {
+    data: sellers = [],
+    isLoading,
+    refetch,
+  } = useQuery({
+    queryKey: ["sellers"],
     queryFn: async () => {
       const res = await fetch(url, {
         headers: {
@@ -17,6 +22,9 @@ const AllSellers = () => {
       return data;
     },
   });
+  if (isLoading) {
+    return <Loading></Loading>;
+  }
   const handleDelete = (id) => {
     const url = `${process.env.REACT_APP_domain}/user/delete/${id}`;
     fetch(url, {
@@ -28,7 +36,7 @@ const AllSellers = () => {
       .then((res) => res.json())
       .then((data) => {
         if (data.deletedCount > 0) {
-          toast.success("Product deleted successfully");
+          toast.success("Seller deleted successfully");
           refetch();
         }
       });
