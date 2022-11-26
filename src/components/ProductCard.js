@@ -79,7 +79,10 @@ const ProductCard = ({ product }) => {
         </div>
       </div>
       {(singleProduct && (
-        <PurchaseModal singleProduct={singleProduct}></PurchaseModal>
+        <PurchaseModal
+          singleProduct={singleProduct}
+          setSingleProduct={setSingleProduct}
+        ></PurchaseModal>
       )) ||
         ""}
     </>

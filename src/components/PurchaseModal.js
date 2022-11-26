@@ -2,31 +2,18 @@ import { format } from "date-fns";
 import React, { useContext, useState } from "react";
 import toast from "react-hot-toast";
 import { AuthContext } from "../contexts/AuthProvider";
-const PurchaseModal = ({ singleProduct }) => {
-  const {
-    _id,
-    name,
-    location,
-    image,
-    description,
-    sellerName,
-    originalprice,
-    resaleprice,
-    purchaseyear,
-    condition,
-    created_at,
-  } = singleProduct;
+const PurchaseModal = ({ singleProduct, setSingleProduct }) => {
+  const { _id, name, image, resaleprice } = singleProduct;
   console.log("modell", singleProduct);
   const { user } = useContext(AuthContext);
-  const handleBooking = (event) => {
+  const handleOrder = (event) => {
     event.preventDefault();
     const form = event.target;
-
     const order = {
       userName: form.userName.value,
       name: form.name.value,
       email: form.email.value,
-      resaleprice: form.resaleprice.value,
+      price: form.price.value,
       phone: form.phone.value,
       meetingLocation: form.meetingLocation.value,
       image: image,
@@ -43,6 +30,7 @@ const PurchaseModal = ({ singleProduct }) => {
       .then((data) => {
         if (data.acknowledged) {
           toast.success("Order placed successfully");
+          setSingleProduct(null);
           console.log(data);
         } else {
           toast.error(data.message);
@@ -62,10 +50,7 @@ const PurchaseModal = ({ singleProduct }) => {
           >
             ✕
           </label>
-          <form
-            onSubmit={handleBooking}
-            className="grid grid-cols-1 gap-3 mt-10"
-          >
+          <form onSubmit={handleOrder} className="grid grid-cols-1 gap-3 mt-10">
             <input
               type="text"
               name="userName"
