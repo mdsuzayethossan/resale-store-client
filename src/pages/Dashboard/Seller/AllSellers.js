@@ -1,10 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useContext } from "react";
-import { AuthContext } from "../../../contexts/AuthProvider";
+import React from "react";
 import toast from "react-hot-toast";
 import Loading from "../../../components/Loading";
 const AllSellers = () => {
-  const { user } = useContext(AuthContext);
   const url = `${process.env.REACT_APP_domain}/sellers`;
   const {
     data: sellers = [],
@@ -43,7 +41,7 @@ const AllSellers = () => {
   };
   return (
     <div>
-      <h2 className="font-bold">My sellers</h2>
+      <h2 className="font-bold">All sellers</h2>
       <div className="overflow-x-auto mt-7">
         <table className="table table-zebra w-full">
           <thead>
