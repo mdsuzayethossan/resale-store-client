@@ -3,10 +3,10 @@ import React from "react";
 const About = () => {
   return (
     <div className="">
-      <div className="flex gap-10 py-20">
+      <div className="md:flex gap-10 py-20">
         <img
           src="https://i.ibb.co/G5kWrhP/Blog-cover.jpg"
-          className="rounded-lg shadow-2xl w-1/2"
+          className="rounded-lg shadow-2xl md:w-1/2 mb-8 md:mb-0"
           alt=""
         />
         <div>

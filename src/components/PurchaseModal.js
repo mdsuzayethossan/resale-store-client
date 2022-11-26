@@ -1,5 +1,4 @@
-import { format } from "date-fns";
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import toast from "react-hot-toast";
 import { AuthContext } from "../contexts/AuthProvider";
 const PurchaseModal = ({ singleProduct, setSingleProduct }) => {
@@ -46,6 +45,7 @@ const PurchaseModal = ({ singleProduct, setSingleProduct }) => {
         <div className="modal-box relative">
           <label
             htmlFor="purchase-modal"
+            onClick={() => setSingleProduct(null)}
             className="btn btn-sm btn-circle absolute right-2 top-2"
           >
             ✕

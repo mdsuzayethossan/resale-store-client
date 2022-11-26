@@ -11,12 +11,25 @@ const ProductCard = ({ product }) => {
     image,
     description,
     sellerName,
+    sellerEmail,
     originalprice,
     resaleprice,
     purchaseyear,
     condition,
     created_at,
   } = product;
+  const handleAddToWishlist = (product) => {
+    const order = {
+      userName: sellerName,
+      name: name,
+      email: sellerEmail,
+      // price: resaleprice,
+      // phone: ,
+      // meetingLocation: form.meetingLocation.value,
+      // image: image,
+      // paid: false,
+    };
+  };
 
   return (
     <>
@@ -30,6 +43,23 @@ const ProductCard = ({ product }) => {
             {sellerName}
             <div className="badge bg-transparent border-0">
               <CheckmarkIcon />
+            </div>
+            <div className="badge flex-1 bg-transparent border-0 justify-end">
+              <svg
+                onClick={() => handleAddToWishlist(product)}
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 text-primary cursor-pointer"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
             </div>
           </h5>
           <h2 className="card-title">{name}</h2>
@@ -67,7 +97,7 @@ const ProductCard = ({ product }) => {
             </svg>
             <span>{location}</span>
           </p>
-          <div className="card-actions">
+          <div className="card-actions mt-4">
             <label
               htmlFor="purchase-modal"
               onClick={() => setSingleProduct(product)}

@@ -4,7 +4,7 @@ module.exports = {
     themes: [
       {
         mytheme: {
-          primary: "#179BA2",
+          primary: "#EF7625",
 
           secondary: "#524dea",
 
