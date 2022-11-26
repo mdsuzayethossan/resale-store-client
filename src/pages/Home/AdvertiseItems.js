@@ -4,12 +4,9 @@ import ProductCard from "../../components/ProductCard";
 import Loading from "../../components/Loading";
 const AdvertiseItems = () => {
   const [advertisedProducts, setAdvertisedProducts] = useState([]);
-  const [loading, setLoading] = useState(false);
-  if (loading) {
-    <Loading></Loading>;
-  }
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    setLoading(true);
     axios
       .get(`${process.env.REACT_APP_domain}/advertised-products`)
       .then((response) => {
@@ -17,6 +14,9 @@ const AdvertiseItems = () => {
       });
     setLoading(false);
   }, []);
+  if (loading) {
+    return <Loading></Loading>;
+  }
   return (
     <>
       {(advertisedProducts?.length && (

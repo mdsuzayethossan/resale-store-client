@@ -4,17 +4,17 @@ import axios from "axios";
 import Loading from "../../components/Loading";
 const Categories = () => {
   const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(false);
-  if (loading) {
-    <Loading></Loading>;
-  }
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    setLoading(true);
     axios.get(`${process.env.REACT_APP_domain}/categories`).then((response) => {
       setCategories(response.data);
     });
     setLoading(false);
   }, []);
+  if (loading) {
+    return <Loading></Loading>;
+  }
   return (
     <div className="w-full mx-auto my-20">
       <h2 className="text-2xl font-bold text-center mb-10">
