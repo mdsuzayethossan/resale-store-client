@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import Loading from "../../components/Loading";
 const Categories = () => {
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
+  if (loading) {
+    <Loading></Loading>;
+  }
   useEffect(() => {
+    setLoading(true);
     axios.get(`${process.env.REACT_APP_domain}/categories`).then((response) => {
       setCategories(response.data);
     });
+    setLoading(false);
   }, []);
   return (
     <div className="w-full mx-auto my-20">
