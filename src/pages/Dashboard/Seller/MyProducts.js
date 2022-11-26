@@ -36,7 +36,22 @@ const MyProducts = () => {
         }
       });
   };
-
+  const handleDelete = (id) => {
+    const url = `${process.env.REACT_APP_domain}/product/delete/${id}`;
+    fetch(url, {
+      method: "DELETE",
+      headers: {
+        authorization: `bearer ${localStorage.getItem("accessToken")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.deletedCount > 0) {
+          toast.success("Product deleted successfully");
+          refetch();
+        }
+      });
+  };
   return (
     <div>
       <h2 className="font-bold">My Products</h2>
