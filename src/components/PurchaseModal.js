@@ -3,12 +3,12 @@ import toast from "react-hot-toast";
 import { AuthContext } from "../contexts/AuthProvider";
 const PurchaseModal = ({ singleProduct, setSingleProduct }) => {
   const { _id, name, image, resaleprice } = singleProduct;
-  console.log("modell", singleProduct);
   const { user } = useContext(AuthContext);
   const handleOrder = (event) => {
     event.preventDefault();
     const form = event.target;
     const order = {
+      productId: _id,
       userName: form.userName.value,
       name: form.name.value,
       email: form.email.value,

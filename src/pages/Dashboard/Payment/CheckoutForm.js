@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import Loading from "../../../components/Loading";
 
 const CheckoutForm = ({ OrderInfo }) => {
-  const { _id, price, userName, email } = OrderInfo;
+  const { _id, price, userName, email, productId } = OrderInfo;
   const [cardErr, setCardErr] = useState("");
   const [success, setSuccess] = useState("");
   const [transactionId, setTransactionId] = useState("");
@@ -67,6 +67,7 @@ const CheckoutForm = ({ OrderInfo }) => {
     if (paymentIntent.status === "succeeded") {
       const payment = {
         orderId: _id,
+        productId,
         email,
         price,
         transactionId: paymentIntent.id,
