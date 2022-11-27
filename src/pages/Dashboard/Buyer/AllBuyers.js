@@ -47,8 +47,8 @@ const AllBuyers = () => {
           <thead>
             <tr>
               <th>SN</th>
-              <th>Name</th>
               <th>Image</th>
+              <th>Name</th>
               <th>Email</th>
               <th>Action</th>
             </tr>

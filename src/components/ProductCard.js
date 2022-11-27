@@ -5,6 +5,7 @@ import PurchaseModal from "./PurchaseModal";
 import { AuthContext } from "../contexts/AuthProvider";
 import useBuyer from "../hooks/useBuyer";
 import { useLocation } from "react-router-dom";
+import useVerified from "../hooks/useVerified";
 const ProductCard = ({ product }) => {
   const { user } = useContext(AuthContext);
   const [isBuyer] = useBuyer(user?.email);
@@ -26,6 +27,7 @@ const ProductCard = ({ product }) => {
     condition,
     created_at,
   } = product;
+  const [isVerified] = useVerified(sellerEmail);
   const isCategoryRoute = locationName.pathname === `/category/${category}`;
   const handleAddToReport = () => {
     const reported = {
@@ -73,9 +75,12 @@ const ProductCard = ({ product }) => {
           <span>{format(new Date(created_at).getTime(), "PPpp")}</span>
           <h5 className="font-bold flex items-center">
             {sellerName}
-            <div className="badge bg-transparent border-0">
-              <CheckmarkIcon />
-            </div>
+            {isVerified && (
+              <div className="badge bg-transparent border-0">
+                <CheckmarkIcon />
+              </div>
+            )}
+
             <div className="badge flex-1 bg-transparent border-0 justify-end">
               <svg
                 onClick={() => handleAddToWishlist(product)}
@@ -105,7 +110,7 @@ const ProductCard = ({ product }) => {
             {format(new Date().getTime(), "yyyy") - purchaseyear} years
           </p>
           <p>
-            <span>Condition</span> {condition}
+            <span>Condition:</span> {condition}
           </p>
           <p className="flex items-center gap-2">
             <svg

@@ -24,7 +24,7 @@ const Categories = () => {
         {categories.map((category) => (
           <Link
             to={`/category/${category._id}`}
-            className="btn btn-primary"
+            className="btn btn-primary text-white"
             key={category._id}
           >
             {category.name}

@@ -15,6 +15,7 @@ import Home from "../pages/Home/Home";
 import Login from "../pages/Login";
 import Products from "../pages/Products/Products";
 import Register from "../pages/Register";
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
   {
@@ -36,7 +37,11 @@ const router = createBrowserRouter([
       },
       {
         path: "/category/:id",
-        element: <Products></Products>,
+        element: (
+          <PrivateRoute>
+            <Products></Products>
+          </PrivateRoute>
+        ),
         loader: ({ params }) =>
           fetch(`${process.env.REACT_APP_domain}/category/${params.id}`),
       },

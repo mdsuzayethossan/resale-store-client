@@ -6,8 +6,7 @@ import useToken from "../hooks/useToken";
 import toast from "react-hot-toast";
 import { GoogleAuthProvider } from "firebase/auth";
 const Login = () => {
-  const { loading, setLoading, signIn, setUser, providerLogin } =
-    useContext(AuthContext);
+  const { signIn, providerLogin } = useContext(AuthContext);
   const googleProvider = new GoogleAuthProvider();
   const [loginError, setLoginError] = useState("");
   const [loginUserEmail, setLoginUserEmail] = useState("");
@@ -20,20 +19,19 @@ const Login = () => {
   }
 
   const handleLogin = (event) => {
+    setLoginError("");
     event.preventDefault();
     const form = event.target;
     const user = {
       email: form.email.value,
       password: form.password.value,
     };
-    setLoginError("");
     signIn(user.email, user.password)
       .then((result) => {
         const user = result.user;
         setLoginUserEmail(user.email);
       })
       .catch((error) => {
-        console.log(error.message);
         setLoginError(error.message);
       });
   };
@@ -42,7 +40,6 @@ const Login = () => {
     providerLogin(googleProvider)
       .then((result) => {
         const user = result.user;
-        setUser(user);
         const userDetails = {
           name: user.displayName,
           role: "buyer",
