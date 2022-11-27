@@ -5,6 +5,7 @@ import Main from "../Layouts/Main";
 import AllBuyers from "../pages/Dashboard/Buyer/AllBuyers";
 import Orders from "../pages/Dashboard/Buyer/Orders";
 import Dashboard from "../pages/Dashboard/Dashboard";
+import Payment from "../pages/Dashboard/Payment/Payment";
 import AddProduct from "../pages/Dashboard/Seller/AddProduct";
 import AllSellers from "../pages/Dashboard/Seller/AllSellers";
 import MyProducts from "../pages/Dashboard/Seller/MyProducts";
@@ -66,6 +67,12 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/all-buyers",
         element: <AllBuyers></AllBuyers>,
+      },
+      {
+        path: "/dashboard/payment/:id",
+        element: <Payment></Payment>,
+        loader: ({ params }) =>
+          fetch(`${process.env.REACT_APP_domain}/orders/${params.id}`),
       },
     ],
   },

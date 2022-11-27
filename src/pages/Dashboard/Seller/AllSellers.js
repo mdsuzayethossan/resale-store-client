@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import toast from "react-hot-toast";
+import toast, { CheckmarkIcon } from "react-hot-toast";
 import Loading from "../../../components/Loading";
 const AllSellers = () => {
   const url = `${process.env.REACT_APP_domain}/sellers`;
@@ -39,6 +39,22 @@ const AllSellers = () => {
         }
       });
   };
+  const handleVerify = (id) => {
+    const url = `${process.env.REACT_APP_domain}/user/verify/${id}`;
+    fetch(url, {
+      method: "PUT",
+      headers: {
+        authorization: `bearer ${localStorage.getItem("accessToken")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.modifiedCount > 0) {
+          toast.success("Successfully verified");
+          refetch();
+        }
+      });
+  };
   return (
     <div>
       <h2 className="font-bold">All sellers</h2>
@@ -50,6 +66,7 @@ const AllSellers = () => {
               <th>Name</th>
               <th>Image</th>
               <th>Email</th>
+              <th>Status</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -67,6 +84,20 @@ const AllSellers = () => {
                   </td>
                   <td>{seller.name}</td>
                   <td>{seller.email}</td>
+                  <td>
+                    {(!seller.verified && (
+                      <button
+                        onClick={() => handleVerify(seller._id)}
+                        className="btn btn-sm btn-primary"
+                      >
+                        Verify
+                      </button>
+                    )) || (
+                      <div className="badge bg-transparent border-0">
+                        <CheckmarkIcon />
+                      </div>
+                    )}
+                  </td>
                   <td>
                     {" "}
                     <svg
