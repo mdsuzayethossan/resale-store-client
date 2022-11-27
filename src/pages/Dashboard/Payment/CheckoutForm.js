@@ -1,18 +1,18 @@
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import React, { useState, useEffect } from "react";
+import Loading from "../../../components/Loading";
 
 const CheckoutForm = ({ OrderInfo }) => {
-  console.log(OrderInfo);
-  const { price, userName, email } = OrderInfo;
+  const { _id, price, userName, email } = OrderInfo;
   const [cardErr, setCardErr] = useState("");
   const [success, setSuccess] = useState("");
   const [transactionId, setTransactionId] = useState("");
   const stripe = useStripe();
   const elements = useElements();
   const [clientSecret, setClientSecret] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Create PaymentIntent as soon as the page loads
     fetch(`${process.env.REACT_APP_domain}/create-payment-intent`, {
       method: "POST",
       headers: {
@@ -24,16 +24,17 @@ const CheckoutForm = ({ OrderInfo }) => {
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
   }, [price]);
-  setSuccess("");
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    setLoading(true);
     if (!stripe || !elements) {
+      setLoading(false);
       return;
     }
     const card = elements.getElement(CardElement);
 
     if (card == null) {
+      setLoading(false);
       return;
     }
     const { error, paymentMethod } = await stripe.createPaymentMethod({
@@ -42,10 +43,12 @@ const CheckoutForm = ({ OrderInfo }) => {
     });
 
     if (error) {
+      setLoading(false);
       setCardErr(error.message);
     } else {
       setCardErr("");
     }
+    setSuccess("");
     const { paymentIntent, error: confirmError } =
       await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
@@ -58,11 +61,32 @@ const CheckoutForm = ({ OrderInfo }) => {
       });
     if (confirmError) {
       setCardErr(confirmError.message);
+      setLoading(false);
       return;
     }
     if (paymentIntent.status === "succeeded") {
-      setSuccess("Congtats! your payment completed successfully");
-      setTransactionId(paymentIntent.id);
+      const payment = {
+        orderId: _id,
+        email,
+        price,
+        transactionId: paymentIntent.id,
+      };
+      fetch(`${process.env.REACT_APP_domain}/payment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          authorization: `bearer ${localStorage.getItem("accessToken")}`,
+        },
+        body: JSON.stringify(payment),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.insertedId) {
+            setLoading(false);
+            setSuccess("Congtats! your payment completed successfully");
+            setTransactionId(paymentIntent.id);
+          }
+        });
     }
   };
   return (
@@ -84,13 +108,15 @@ const CheckoutForm = ({ OrderInfo }) => {
             },
           }}
         />
-        <button
-          className="btn btn-sm btn-primary text-white mt-8"
-          type="submit"
-          disabled={!stripe || !clientSecret}
-        >
-          Pay
-        </button>
+        {(loading && <Loading></Loading>) || (
+          <button
+            className="btn btn-sm btn-primary text-white mt-8"
+            type="submit"
+            disabled={!stripe || !clientSecret}
+          >
+            Pay
+          </button>
+        )}
       </form>
       {cardErr && (
         <div className="alert alert-error shadow-lg mt-5">
@@ -114,7 +140,7 @@ const CheckoutForm = ({ OrderInfo }) => {
       )}
       {success && (
         <>
-          <div className="alert alert-success shadow-lg">
+          <div className="alert alert-success shadow-lg mt-5">
             <div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
