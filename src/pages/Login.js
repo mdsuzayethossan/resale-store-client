@@ -1,12 +1,14 @@
 import React, { useContext, useState } from "react";
 import { LockClosedIcon } from "@heroicons/react/20/solid";
 import { AuthContext } from "../contexts/AuthProvider";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import useToken from "../hooks/useToken";
 import toast from "react-hot-toast";
 import { GoogleAuthProvider } from "firebase/auth";
+import Loading from "../components/Loading";
 const Login = () => {
   const { signIn, providerLogin } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   const googleProvider = new GoogleAuthProvider();
   const [loginError, setLoginError] = useState("");
   const [loginUserEmail, setLoginUserEmail] = useState("");
@@ -17,10 +19,14 @@ const Login = () => {
   if (token) {
     navigate(from, { replace: true });
   }
+  if (loading) {
+    return <Loading></Loading>;
+  }
 
   const handleLogin = (event) => {
     setLoginError("");
     event.preventDefault();
+    setLoading(true);
     const form = event.target;
     const user = {
       email: form.email.value,
@@ -28,10 +34,12 @@ const Login = () => {
     };
     signIn(user.email, user.password)
       .then((result) => {
+        setLoading(false);
         const user = result.user;
         setLoginUserEmail(user.email);
       })
       .catch((error) => {
+        setLoading(false);
         setLoginError(error.message);
       });
   };
@@ -143,7 +151,17 @@ const Login = () => {
               </a>
             </div>
           </div>
-
+          <label className="label">
+            <span className="label-text-alt">
+              Don't have an account?
+              <Link
+                className="font-bold text-base text-primary link link-hover ml-2"
+                to="/register"
+              >
+                Register
+              </Link>
+            </span>
+          </label>
           <div>
             <button
               type="submit"

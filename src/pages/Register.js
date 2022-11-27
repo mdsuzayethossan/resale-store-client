@@ -355,7 +355,7 @@ const Register = () => {
                   </svg>
                 </div>
               )) || (
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="btn text-white btn-primary">
                   Register
                 </button>
               )}
