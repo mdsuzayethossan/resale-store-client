@@ -1,8 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { format } from "date-fns";
-import { CheckmarkIcon } from "react-hot-toast";
+import { CheckmarkIcon, toast } from "react-hot-toast";
 import PurchaseModal from "./PurchaseModal";
+import { AuthContext } from "../contexts/AuthProvider";
+import useBuyer from "../hooks/useBuyer";
+import { useLocation } from "react-router-dom";
 const ProductCard = ({ product }) => {
+  const { user } = useContext(AuthContext);
+  const [isBuyer] = useBuyer(user?.email);
+  const locationName = useLocation();
+
   const [singleProduct, setSingleProduct] = useState(null);
   const {
     _id,
@@ -11,6 +18,7 @@ const ProductCard = ({ product }) => {
     image,
     description,
     sellerName,
+    category,
     sellerEmail,
     originalprice,
     resaleprice,
@@ -18,16 +26,40 @@ const ProductCard = ({ product }) => {
     condition,
     created_at,
   } = product;
+  const isCategoryRoute = locationName.pathname === `/category/${category}`;
+  const handleAddToReport = () => {
+    const reported = {
+      productId: _id,
+      user: user?.displayName,
+      name: name,
+      email: user?.email,
+      price: resaleprice,
+      image: image,
+    };
+    fetch(`${process.env.REACT_APP_domain}/report`, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(reported),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.acknowledged) {
+          toast.success("Reported placed successfully");
+        } else {
+          toast.error(data.message);
+        }
+      })
+      .catch((err) => toast.error(err));
+  };
   const handleAddToWishlist = (product) => {
     const order = {
       userName: sellerName,
       name: name,
       email: sellerEmail,
-      // price: resaleprice,
-      // phone: ,
-      // meetingLocation: form.meetingLocation.value,
-      // image: image,
-      // paid: false,
+      price: resaleprice,
+      image: image,
     };
   };
 
@@ -97,14 +129,23 @@ const ProductCard = ({ product }) => {
             </svg>
             <span>{location}</span>
           </p>
-          <div className="card-actions mt-4">
+          <div className="card-actions mt-4 flex justify-between">
             <label
               htmlFor="purchase-modal"
               onClick={() => setSingleProduct(product)}
-              className="btn btn-primary"
+              className="btn btn-primary text-white"
             >
               Book now
             </label>
+            {isBuyer && isCategoryRoute && (
+              <label
+                htmlFor="purchase-modal"
+                onClick={handleAddToReport}
+                className="btn btn-primary text-white"
+              >
+                Report to admin
+              </label>
+            )}
           </div>
         </div>
       </div>

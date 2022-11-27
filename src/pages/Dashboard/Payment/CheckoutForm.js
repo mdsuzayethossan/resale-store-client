@@ -1,5 +1,6 @@
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import Loading from "../../../components/Loading";
 
 const CheckoutForm = ({ OrderInfo }) => {
@@ -83,6 +84,7 @@ const CheckoutForm = ({ OrderInfo }) => {
         .then((res) => res.json())
         .then((data) => {
           if (data.insertedId) {
+            toast.success("Congtats! your payment completed successfully");
             setLoading(false);
             setSuccess("Congtats! your payment completed successfully");
             setTransactionId(paymentIntent.id);

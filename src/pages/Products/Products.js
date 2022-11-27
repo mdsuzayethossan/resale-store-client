@@ -10,11 +10,17 @@ const Products = () => {
   }
   return (
     <div className="container py-20">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
-        {loadProducts.map((product) => (
-          <ProductCard key={product._id} product={product}></ProductCard>
-        ))}
-      </div>
+      {(loadProducts.length && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4">
+          {loadProducts.map((product) => (
+            <ProductCard key={product._id} product={product}></ProductCard>
+          ))}
+        </div>
+      )) || (
+        <p className="font-bold text-xl text-primary text-center">
+          There are no products in this category.
+        </p>
+      )}
     </div>
   );
 };
