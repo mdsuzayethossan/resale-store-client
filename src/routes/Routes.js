@@ -43,7 +43,11 @@ const router = createBrowserRouter([
           </PrivateRoute>
         ),
         loader: ({ params }) =>
-          fetch(`${process.env.REACT_APP_domain}/category/${params.id}`),
+          fetch(`${process.env.REACT_APP_domain}/category/${params.id}`, {
+            headers: {
+              authorization: `bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }),
       },
       {
         path: "/register",

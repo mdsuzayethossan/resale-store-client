@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { LockClosedIcon } from "@heroicons/react/20/solid";
 import { AuthContext } from "../contexts/AuthProvider";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -16,9 +16,11 @@ const Login = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from?.pathname || "/";
-  if (token) {
-    navigate(from, { replace: true });
-  }
+  useEffect(() => {
+    if (token) {
+      navigate(from, { replace: true });
+    }
+  }, [token]);
   if (loading) {
     return <Loading></Loading>;
   }
