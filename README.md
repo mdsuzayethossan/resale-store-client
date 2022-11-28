@@ -28,5 +28,7 @@ Hosted in Firebase -> [Resale Store](https://resale-store-6001b.web.app/)
   - This page will show category based products.
 * For responsive design used Tailwind css and also daisyui.
 * Buyer could to buy and pay by card.
-  adminEmail: admin@gmail.com
-  adminPassword: 123456
+
+### adminEmail: admin@gmail.com
+
+### adminPassword: 123456
