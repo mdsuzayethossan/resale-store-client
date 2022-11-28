@@ -75,12 +75,12 @@ const Navbar = () => {
             )}
           </ul>
         </div>
-        <div className="flex-none">
+        <div className="flex-none md:hidden">
           <div className="dropdown dropdown-end"></div>
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
-                <img src="https://placeimg.com/80/80/people" />
+                <img src={user?.photoURL} alt="" />
               </div>
             </label>
             <ul

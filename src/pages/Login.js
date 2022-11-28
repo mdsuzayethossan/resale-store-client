@@ -22,10 +22,13 @@ const Login = () => {
   if (loading) {
     return <Loading></Loading>;
   }
+  if (loginError) {
+    toast.error(loginError);
+  }
 
   const handleLogin = (event) => {
-    setLoginError("");
     event.preventDefault();
+    setLoginError("");
     setLoading(true);
     const form = event.target;
     const user = {
