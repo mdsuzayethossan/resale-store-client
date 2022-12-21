@@ -17,6 +17,7 @@ import Products from "../pages/Products/Products";
 import Register from "../pages/Register";
 import PrivateRoute from "./PrivateRoute";
 import AdminRoute from "./AdminRoute";
+import EditProduct from "../pages/Dashboard/Seller/EditProduct";
 
 const router = createBrowserRouter([
   {
@@ -75,6 +76,16 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/my-products",
         element: <MyProducts></MyProducts>,
+      },
+      {
+        path: "/dashboard/my-products/edit/:id",
+        element: <EditProduct></EditProduct>,
+        loader: ({ params }) =>
+          fetch(`${process.env.REACT_APP_domain}/products/${params.id}`, {
+            headers: {
+              authorization: `bearer ${localStorage.getItem("accessToken")}`,
+            },
+          }),
       },
       {
         path: "/dashboard/all-sellers",
